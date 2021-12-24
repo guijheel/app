@@ -1,8 +1,7 @@
 {
-  "name": "app",
+  "name": "IFCM",
   "integrations": {
     "capacitor": {}
   },
-  "type": "react",
-  "id": "57b0b1dd"
+  "type": "react"
 }
