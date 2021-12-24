@@ -1,7 +1,5 @@
 
-   
 import React, { useState, useEffect } from "react";
-
 import {
   IonHeader,
   IonToolbar,
@@ -21,12 +19,9 @@ import {
   IonIcon
 } from "@ionic/react";
 import { RouteComponentProps } from "react-router";
-
-
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-
 /*
 import {
   signInWithGoogleIFCM,
@@ -41,8 +36,9 @@ import "./Login.scss";
 
 import { logoFacebook, logoGoogle, logoTwitter } from "ionicons/icons";
 
-
-import { signInWithGoogle } from "../firebase/firebaseConfig";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { signInWithEmailAndPassword, signInWithFacebook, signInWithGoogle, signInWithTwitter, auth, authuser } from "../firebase/firebaseConfig";
+import { Link, useHistory } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -50,6 +46,8 @@ const Login: React.FC = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [user, loading, error] = useAuthState(authuser);
+  const history = useHistory();
   
 //  const user = firebase.auth().currentUser;
 /*
@@ -62,6 +60,14 @@ const Login: React.FC = () => {
     }
   }, [user ]);
 */
+useEffect(() => {
+  if (loading) {
+    // maybe trigger a loading screen
+    return;
+  }
+  if (user) history.replace("/tabs/home");
+}, [user, loading]);
+console.log(user)
   const login = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
@@ -100,7 +106,7 @@ const Login: React.FC = () => {
               expand="block"
               color="facebook"
               className="margin"
-              //onClick={() => signInWithFacebook()}
+              onClick={() => signInWithFacebook()}
             >
               <IonIcon icon={logoFacebook} color={"#ffffff"}  />{" "}
               <IonText className="facebook">Facebook Connect</IonText>
@@ -111,7 +117,7 @@ const Login: React.FC = () => {
             <IonIcon icon={logoGoogle} color={"#ffffff"} />{" "}
               </IonButton>
 
-              <IonButton  className="margin-google"// onClick={() => signInWithTwitter( )}
+              <IonButton  className="margin-google" onClick={() => signInWithTwitter()}
               >
             <IonIcon icon={logoTwitter} color={"#ffffff"} />{" "}
               </IonButton>
@@ -163,7 +169,7 @@ const Login: React.FC = () => {
 
           <IonRow>
             <IonCol>
-              <IonButton className="login-button" type="submit" expand="block">
+              <IonButton className="login-button" type="submit" expand="block" onClick={() => signInWithEmailAndPassword(username,password)}>
                 Login
               </IonButton>
             </IonCol>
